@@ -1,4 +1,5 @@
 import { resolveSrv } from 'dns/promises'
+const { v4 } = require('uuid')
 import express from 'express'
 const router = express.Router()
 const imgModel = require('../models/image_model')
@@ -6,104 +7,84 @@ const imgModel = require('../models/image_model')
 // no callbacks needed as parameters when doing .promises
 const fs = require('fs').promises
 
-
-
+// I just care about storing and retrieving images for this image router, so I don't plan on creating any put or delete routes.
 
 router.route('/').get(
     async (req, res) => {
 
+        let results : string[] = ['placeholder']
 
         try {
-            const base64 = await fs.readFile("./test_images/0.png", "base64")
-            // res.send(`base64: ${base64}`)
-            const buffer = Buffer.from(base64, "base64");
+            const imageDatas = await imgModel.find({})
+            for (const imageData of imageDatas)
+            {
+                const buffer = imageData.image.data
+                const filePathComplete = `${process.env.DESTINATION_PATH}${imageData.name}`
+                await fs.writeFile(filePathComplete, buffer)
+                results.push(`saved image to ${filePathComplete}`)
+            }
 
-            // TODO: add the buffer contents into the mongodb database
-            res.send(buffer)
 
-            await fs.writeFile("output.png", buffer)
 
-        } catch (e) {
-            res.send(e)
+        } catch (e : any) {
+            results.push(`${e.name} ||| ${e.message}`)
 
         }
 
+        res.send(results)
+    }
+)
+.post(
+    async (req:any, res:any, next:any) => {
 
+        const DIR = process.env.SOURCE_PATH
 
-        // await imgModel.findOne({uid: "0"}, async (err:any, data:any) => {
-        //     if (err) console.log(err)
-        //     else
-        //     {
-        //         console.log(data.image.data);
-        //         const buffer = Buffer.from(data.image.data, "base64")
-        //         await fs.writeFile("dummy.png", buffer, function (error:any) {
-        //             if (error) throw error;
-        //             console.log('File saved.')
-        //         })
-        //         res.send('success')
-        //     }
+        let results : string[] = ['placeholder']
 
-        // }).clone().catch((err:any)=>{ console.log(err)})
-    // await imgModel.find({}, (err:any, data:any) => {
-    //     if (err) {
-    //         console.log(err)
-    //     }
-    //     else
-    //     {
-    //         res.send(data)
-    //     }
-    // }).clone().catch((err:any)=>{ console.log(err)})
-}).post(async (req:any, res:any, next:any) => {
+        try {
+            const files : string[] = await fs.readdir(DIR)
 
+            // if (files.length !== new Set(files).size)
+            //     throw new Error('the list is not unique')
+            // else
+            // {
+            //     console.log('list is unique');
+            // }
 
-    const DIR = '/Users/leozhang/Documents/Github/nasa_daily_pic_collection/archive/'
+            // files object contains all files names
+            // log them on console
+            for (const [idx, file] of files.entries())
+            {
+                // console.log(file)
+                // if (idx !== 0) break
+                const fileContentsInBase64 = await fs.readFile(DIR+file, "base64")
+                const buffer = Buffer.from(fileContentsInBase64, "base64");
 
-    await fs.readdir(DIR, (err: Error, files: string[]) => {
-        if (err) {
-            throw err
+                // console.log(file, idx)
+                var img = new imgModel({
+                    id: v4(),
+                    name: file,
+                    description: 'NASA image of the day',
+                    image: {
+                        // when retrieving the data from the mongodb database, we can directly pass it to fs.writeFile
+                        data: buffer,
+                        contentType: 'image/png'
+                    }
+                })
+
+                const res = await img.save()
+                results.push(`saved image named: ${file}`)
+            }
+        }
+        catch (e : any) {
+            results.push(`(${e.name} ||| ${e.message})`)
         }
 
-        // console.log(files.length)
-
-        // files object contains all files names
-        // log them on console
-        files.forEach((file:string, idx:number) => {
-            // console.log(file, idx)
-            var img = new imgModel({
-                // name: req.body.name,
-                // desc: req.body.desc,
-                uid: idx,
-                name: file,
-                desc: 'image ' + idx,
-                image: {
-                    // data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
-                    data: DIR+file,
-                    contentType: 'image/png'
-                }
-            })
-
-            img.save((err:any, data:any) => {
-                // console.log(data);
-                if (err)
-                {
-                    throw err
-                }
-                else
-                {
-                }
-            })
-        })
-    })
+        res.send(results)
+    }
+,)
 
 
-    res.send(`inserted all images into the database`)
-
-})
-
-
-// router.post('/upload', (req, res) => {
-//     res.send('uploaded images to db')
-// })
 
 
 module.exports = router

@@ -1,19 +1,22 @@
-
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 
 const ImageSchema = mongoose.Schema({
-    name : String,
-    desc: String,
+    id : {
+        type: String,
+        unique: true,
+    },
+    name : {
+            type: String,
+            unique: true,
+            required: [true, 'please enter a name'],
+    },
+    description: String,
     image : {
         data: Buffer,
         contentType: String
     },
-    uid: {
-        type: String,
-        unique: true,
-        required: true,
-    },
+
 })
 
 
