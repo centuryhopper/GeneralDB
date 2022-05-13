@@ -7,6 +7,8 @@ const PORT = process.env.PORT || 3000
 const imagesRouter = require('./routers/images')
 const portfolioContactsRouter = require('./routers/portfolio_contacts')
 const bodyParser = require('body-parser');
+const cors = require('cors')
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
