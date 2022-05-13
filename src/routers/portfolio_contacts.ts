@@ -3,7 +3,24 @@ import express from 'express'
 const router = express.Router()
 const portfolioContactModel = require('../models/portfolio_contact_model')
 
-router.post('/', async (req, res) => {
+router.route('/').get(async (req, res) => {
+    let results : string[] = ['placeholder']
+
+    try {
+        const contactModels = await portfolioContactModel.find({})
+        for (const contactModel of contactModels)
+        {
+            results.push(contactModel)
+        }
+
+    } catch (e : any) {
+        results.push(`${e.name} ||| ${e.message}`)
+
+    }
+
+    res.send(results)
+
+}).post(async (req, res) => {
     try {
         const obj = req.body
 
