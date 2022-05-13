@@ -1,5 +1,6 @@
 # GeneralDB
 
+### post request example using curl in the cli: ```curl -i -X POST -H "Content-Type: application/json" -d '{"name":"test1","email":"test2","subject":"test3","message":"test4"}' http://localhost:3000/portfolio_contacts```
 
 ## These commands should be used in a bash terminal
 ### to install typescript globally, type ```sudo npm i -g typescript```
@@ -24,6 +25,7 @@
 ```"start": "node js_files/app.js"``` and ```"dev": "nodemon src/app.ts"``` and ```"build": "tsc -p ."```
 
 ### to compile your typescript files in your rootDir, type ```tsc```
+
 
 
 

@@ -5,9 +5,10 @@ const logger = require('./utils/logger')
 const app = express()
 const PORT = process.env.PORT || 3000
 const imagesRouter = require('./routers/images')
-// const bodyParser = require('body-parser');
-// app.use(bodyParser.urlencoded({ extended: true }))
-// app.use(bodyParser.json())
+const portfolioContactsRouter = require('./routers/portfolio_contacts')
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
 
 mongoose.connect(process.env.MONGO_URI!, {
     useNewUrlParser: true,
@@ -26,6 +27,8 @@ mongoose.connect(process.env.MONGO_URI!, {
     })
 
 app.use(express.json());
-app.use('/images' , imagesRouter)
+// app.use('/images' , imagesRouter)
+app.use('/portfolio_contacts' , portfolioContactsRouter)
+
 
 app.listen(PORT, () => console.log(`server is running http://localhost:${PORT}/`))
