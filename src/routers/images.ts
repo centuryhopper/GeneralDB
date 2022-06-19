@@ -1,4 +1,3 @@
-import { resolveSrv } from 'dns/promises'
 const { v4 } = require('uuid')
 import express from 'express'
 const router = express.Router()
