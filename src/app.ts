@@ -6,6 +6,8 @@ const app = express()
 const PORT = process.env.PORT || 3000
 const imagesRouter = require('./routers/images')
 const portfolioContactsRouter = require('./routers/portfolio_contacts')
+const booksRouter = require('./routers/books')
+
 const bodyParser = require('body-parser');
 const cors = require('cors')
 app.use(cors())
@@ -31,6 +33,8 @@ mongoose.connect(process.env.MONGO_URI!, {
 app.use(express.json());
 // app.use('/images' , imagesRouter)
 app.use('/portfolio_contacts' , portfolioContactsRouter)
+app.use('/books' , booksRouter)
+
 
 
 app.listen(PORT, () => console.log(`server is running http://localhost:${PORT}/`))
