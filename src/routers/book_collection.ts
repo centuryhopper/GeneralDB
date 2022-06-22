@@ -16,10 +16,20 @@ const bookModel = require('../models/book_model')
     four-work week (tim ferris)
     i will teach you to be rich (ramit sethi)
 
-
     automate the boring stuff with python 2nd edition (al sweigart)
     ISBN-13: 978-1593279929
     ISBN-10: 1593279922
+
+    C++ crash course (josh lospinoso)
+    ISBN-13: 978-1593278885
+    ISBN-10: 1593278888
+
+
+    https://www.reddit.com/r/datascience/comments/qfj9u5/what_kind_of_books_do_you_recommend/
+
+    Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow: Concepts, Tools, and Techniques to Build Intelligent Systems 2nd Edition
+    ISBN-13: 978-1492032649
+    ISBN-10: 1492032646
 
  */
 
