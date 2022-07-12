@@ -6,7 +6,7 @@ const app = express()
 const PORT = process.env.PORT || 3000
 const imagesRouter = require('./routers/images')
 const portfolioContactsRouter = require('./routers/portfolio_contacts')
-const booksRouter = require('./routers/books')
+const booksRouter = require('./routers/book_collection')
 
 const bodyParser = require('body-parser');
 const cors = require('cors')

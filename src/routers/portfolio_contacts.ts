@@ -24,6 +24,12 @@ router.route('/').get(async (req, res) => {
     try {
         const obj = req.body
 
+        const values = Object.values(obj)
+
+        // make sure object is valid before sending to database
+        if (values.length < 4 || values.some(elem => elem === undefined || elem === null || elem === ''))
+            throw new Error('not all fields were filled properly')
+
         var contact = new portfolioContactModel({
             id: v4(),
             name: req.body.name,
@@ -34,10 +40,11 @@ router.route('/').get(async (req, res) => {
 
         await contact.save()
 
-        res.send('saved a contact\'s information into the database!')
+        res.send(`saved a contact\'s information: ${JSON.stringify(obj)} into the database!`)
     } catch (e: any) {
         res.send(e.message)
     }
 })
 
 module.exports = router
+
